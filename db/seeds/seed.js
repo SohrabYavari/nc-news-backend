@@ -1,10 +1,6 @@
 const db = require("../connection");
-const {
-  topicData,
-  userData,
-  articleData,
-  commentData,
-} = require("../data/test-data/index");
+const format = require("pg-format");
+const { createRefObject, convertTimestampToDate } = require("./utils");
 
 const seed = ({ topicData, userData, articleData, commentData }) => {
   return db
@@ -29,7 +25,87 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
     })
     .then(() => {
       return createComments();
-    });
+    })
+    .then(() => {
+      const topicsMapped = topicData.map((topic) => {
+        return [topic.slug, topic.description, topic.img_url];
+      });
+      const topicReformat = format(
+        `INSERT INTO topics (slug, description, img_url) 
+          VALUES %L RETURNING *`,
+        topicsMapped
+      );
+      return topicReformat;
+    })
+    .then((topicReformat) => {
+      return db.query(topicReformat);
+    })
+    .then(() => {
+      const usersMapped = userData.map((user) => {
+        return [user.username, user.name, user.avatar_url];
+      });
+
+      const userReformat = format(
+        `INSERT INTO users
+        (username, name, avatar_url)
+        VALUES %L RETURNING *
+        `,
+        usersMapped
+      );
+      return userReformat;
+    })
+    .then((userReformat) => {
+      return db.query(userReformat);
+    })
+    .then(() => {
+      const articlesMapped = articleData.map((article) => {
+        return [
+          article.title,
+          article.topic,
+          article.author,
+          article.body,
+          convertTimestampToDate[article.created_at],
+          article.votes,
+          article.article_img_url,
+        ];
+      });
+      const articleReformat = format(
+        `
+        INSERT INTO articles
+        (title, topic, author, body, created_at, votes, article_img_url)
+        VALUES %L RETURNING *
+        `,
+        articlesMapped
+      );
+
+      return articleReformat;
+    })
+    .then((articleReformat) => {
+      return db.query(articleReformat);
+    })
+    .then(() => {
+      const commentsMapped = commentData.map((comment) => {
+        return [
+          createRefObject[comment.article_title],
+          comment.body,
+          comment.votes,
+          comment.author,
+          convertTimestampToDate[comment.created_at],
+        ];
+      });
+
+      const commentReformat = format(
+        `INSERT INTO comments
+        (article_id, body, votes, author, created_at)
+        VALUES %L RETURNING *
+        `, commentsMapped
+      )
+
+      return commentReformat
+    })
+    .then((commentReformat) => {
+      return db.query(commentReformat)
+    })
 };
 
 function createTopics() {
