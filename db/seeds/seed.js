@@ -64,7 +64,7 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
           article.topic,
           article.author,
           article.body,
-          convertTimestampToDate[article.created_at],
+          convertTimestampToDate(article).created_at,
           article.votes,
           article.article_img_url,
         ];
@@ -78,19 +78,19 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
         articlesMapped
       );
 
-      return articleReformat;
-    })
-    .then((articleReformat) => {
       return db.query(articleReformat);
+      
     })
-    .then(() => {
+    .then(({rows}) => {
+      const commentsRef = createRefObject(rows, 'title', 'article_id')
+      console.log(commentsRef)
       const commentsMapped = commentData.map((comment) => {
         return [
-          createRefObject[comment.article_title],
+          commentsRef[comment.article_title],
           comment.body,
           comment.votes,
           comment.author,
-          convertTimestampToDate[comment.created_at],
+          convertTimestampToDate(comment).created_at,
         ];
       });
 
@@ -100,12 +100,11 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
         VALUES %L RETURNING *
         `, commentsMapped
       )
-
-      return commentReformat
+      return db.query(commentReformat)  
+    }).then(({rows}) => {
+      console.log(rows)
     })
-    .then((commentReformat) => {
-      return db.query(commentReformat)
-    })
+  
 };
 
 function createTopics() {
