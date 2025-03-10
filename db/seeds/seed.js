@@ -35,9 +35,6 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
           VALUES %L RETURNING *`,
         topicsMapped
       );
-      return topicReformat;
-    })
-    .then((topicReformat) => {
       return db.query(topicReformat);
     })
     .then(() => {
@@ -52,9 +49,6 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
         `,
         usersMapped
       );
-      return userReformat;
-    })
-    .then((userReformat) => {
       return db.query(userReformat);
     })
     .then(() => {
@@ -79,11 +73,9 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
       );
 
       return db.query(articleReformat);
-      
     })
     .then(({rows}) => {
       const commentsRef = createRefObject(rows, 'title', 'article_id')
-      console.log(commentsRef)
       const commentsMapped = commentData.map((comment) => {
         return [
           commentsRef[comment.article_title],
@@ -101,10 +93,7 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
         `, commentsMapped
       )
       return db.query(commentReformat)  
-    }).then(({rows}) => {
-      console.log(rows)
     })
-  
 };
 
 function createTopics() {
