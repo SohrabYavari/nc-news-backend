@@ -4,6 +4,7 @@ const app = require("../../app");
 const db = require("../../db/connection");
 const seed = require("../../db/seeds/seed");
 const data = require("../../db/data/test-data/index");
+require('jest-sorted')
 
 beforeAll(() => seed(data));
 afterAll(() => db.end());
@@ -37,12 +38,20 @@ describe("/api/articles Tests", () => {
           articles.forEach((article) => {
             expect(typeof article.title).toBe("string");
             expect(typeof article.author).toBe("string");
-            expect(typeof article.body).toBe("string");
             expect(typeof article.created_at).toBe("string");
             expect(typeof article.votes).toBe("number");
             expect(typeof article.article_img_url).toBe("string");
             expect(typeof article.comment_count).toBe('string')
           });
+        });
+    });
+
+    test("200: Responds with all of the articles.", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSortedBy('created_at')
         });
     });
   });
