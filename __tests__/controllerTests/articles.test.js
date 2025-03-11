@@ -4,7 +4,7 @@ const app = require("../../app");
 const db = require("../../db/connection");
 const seed = require("../../db/seeds/seed");
 const data = require("../../db/data/test-data/index");
-require('jest-sorted')
+require("jest-sorted");
 
 beforeAll(() => seed(data));
 afterAll(() => db.end());
@@ -34,24 +34,38 @@ describe("/api/articles Tests", () => {
         .get("/api/articles")
         .expect(200)
         .then(({ body: { articles } }) => {
-          console.log(articles)
           articles.forEach((article) => {
             expect(typeof article.title).toBe("string");
             expect(typeof article.author).toBe("string");
             expect(typeof article.created_at).toBe("string");
             expect(typeof article.votes).toBe("number");
             expect(typeof article.article_img_url).toBe("string");
-            expect(typeof article.comment_count).toBe('string')
+            expect(typeof article.comment_count).toBe("string");
           });
         });
     });
 
-    test("200: Responds with all of the articles.", () => {
+    test("200: Responds with the correct ordered articles.", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
         .then(({ body: { articles } }) => {
-          expect(articles).toBeSortedBy('created_at')
+          expect(articles).toBeSortedBy("created_at");
+        });
+    });
+    test("200: Responds with the comments of a specific article.", () => {
+      return request(app)
+        .get("/api/articles/6/comments")
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments).toMatchObject({
+            article_id: 6,
+            body: "This is a bad article name",
+            votes: 1,
+            author: "butter_bridge",
+            created_at: "2020-10-11T15:23:00.000Z",
+            comment_id: 16,
+          });
         });
     });
   });
