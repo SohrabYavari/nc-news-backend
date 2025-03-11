@@ -25,5 +25,52 @@
         }
       ]
     }
+  },
+  "GET /api/articles/:articleId": {
+    "description": "serves an array of article with given article_id",
+    "query": ["articleId"],
+    "exampleResponse": {
+      "article": [
+        {
+          "article_id": 20,
+          "title": "Seafood substitutions are increasing",
+          "topic": "cooking",
+          "author": "weegembump",
+          "body": "Text from the article..",
+          "created_at": "2018-05-30T15:59:13.341Z",
+          "votes": 0,
+          "comment_count": 6
+        }
+      ]
+    }
+  },
+  "GET /api/articles/:articleId/comments": {
+    "description": "serves an array of comments from a specific article when given an article_id",
+    "query": ["articleId"],
+    "exampleResponse": {
+      "article": [
+        {
+          "article_id": 20,
+          "comment_id": 10,
+          "author": "weegembump",
+          "body": "Text from the comment..",
+          "created_at": "2018-05-30T15:59:13.341Z",
+          "votes": 0
+        }
+      ]
+    }
+  },
+  "GET /api/users": {
+    "description": "serves an array of users",
+    "query": [],
+    "exampleResponse": {
+      "article": [
+        {
+          "username": "weegembump",
+          "name": "mitch",
+          "avatar_url": "https://url..."
+        }
+      ]
+    }
   }
 }
