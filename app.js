@@ -13,12 +13,16 @@ app.get("/api", (request, response) => {
   response.status(200).send({ endpoints });
 });
 
-// GET Requests
+// TOPICS - GET REQUESTS
 app.get("/api/topics", getTopics);
-app.get("/api/articles/:articleId", getArticleById);
+
+// ARTICLES - GET REQUESTS
 app.get("/api/articles", getArticles);
+app.get("/api/articles/:articleId", getArticleById);
 app.get("/api/articles/:articleId/comments", getArticleCommentsById);
 
+// USERS - GET REQUESTS
 app.get("/api/users", getAllUsers);
+
 
 module.exports = app;

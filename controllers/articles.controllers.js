@@ -1,7 +1,7 @@
 const {
   fetchArticleById,
   fetchAllArticles,
-  fetchArticleCommentsById
+  fetchArticleCommentsById,
 } = require("../models/articles.models");
 
 exports.getArticleById = (request, response) => {
@@ -13,7 +13,9 @@ exports.getArticleById = (request, response) => {
 };
 
 exports.getArticles = (request, response) => {
-  fetchAllArticles().then((articles) => {
+  const { sort_by, order, author, topic } = request.query;
+
+  fetchAllArticles(author, topic, sort_by, order).then((articles) => {
     response.status(200).send({ articles });
   });
 };
