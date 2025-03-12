@@ -2,6 +2,7 @@ const {
   fetchArticleById,
   fetchAllArticles,
   fetchArticleCommentsById,
+  updateArticleVotes,
 } = require("../models/articles.models");
 
 exports.getArticleById = (request, response) => {
@@ -25,5 +26,14 @@ exports.getArticleCommentsById = (request, response) => {
 
   fetchArticleCommentsById(articleId).then((comments) => {
     response.status(200).send({ comments });
+  });
+};
+
+exports.patchArticleVotes = (request, response) => {
+  const { articleId } = request.params;
+  const { articleVotes } = request.body;
+
+  updateArticleVotes(articleId, articleVotes).then((article) => {
+    response.status(200).send({ article });
   });
 };

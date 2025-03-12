@@ -1,6 +1,0 @@
-You are now connected to database "nc_news_test" as user "sam".
- comment_id | article_id |            body            | votes |    author     |     created_at      
-------------+------------+----------------------------+-------+---------------+---------------------
-         16 |          6 | This is a bad article name |     1 | butter_bridge | 2020-10-11 16:23:00
-(1 row)
-

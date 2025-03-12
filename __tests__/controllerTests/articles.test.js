@@ -25,7 +25,7 @@ describe("/api/articles Tests", () => {
             votes: 100,
             article_img_url:
               "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-            comment_count: "11"
+            comment_count: "11",
           });
         });
     });
@@ -71,13 +71,13 @@ describe("/api/articles Tests", () => {
         });
     });
 
-    // GET QUERIES TESTS: 
+    // GET QUERIES TESTS:
     test("200: Responds the articles array sorted by the votes descending.", () => {
       return request(app)
         .get("/api/articles?sort_by=votes&order=DESC")
         .expect(200)
         .then(({ body: { articles } }) => {
-          expect(articles).toBeSortedBy('votes', {descending: true})
+          expect(articles).toBeSortedBy("votes", { descending: true });
         });
     });
 
@@ -86,7 +86,7 @@ describe("/api/articles Tests", () => {
         .get("/api/articles?sort_by=author&order=DESC")
         .expect(200)
         .then(({ body: { articles } }) => {
-          expect(articles).toBeSortedBy('author', {descending: true})
+          expect(articles).toBeSortedBy("author", { descending: true });
         });
     });
 
@@ -95,9 +95,25 @@ describe("/api/articles Tests", () => {
         .get("/api/articles?sort_by=topic&order=DESC")
         .expect(200)
         .then(({ body: { articles } }) => {
-          expect(articles).toBeSortedBy('topic', {descending: true})
+          expect(articles).toBeSortedBy("topic", { descending: true });
         });
     });
   });
 });
 
+describe("PATCH REQUESTS", () => {
+  describe("PATCH: /api/articles/:articleId", () => {
+    test("200: changes the article votes based on the number passed through", () => {
+      const voteUpdate = { articleVotes: -50 };
+
+      return request(app)
+        .patch("/api/articles/1")
+        .send(voteUpdate)
+        .expect(200)
+        .then(({ body: { article }}) => {
+          console.log(article)
+          expect(article[0].votes).toBe(50);
+        });
+    });
+  });
+});
