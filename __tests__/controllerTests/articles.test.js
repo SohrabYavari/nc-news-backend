@@ -4,9 +4,8 @@ const app = require("../../app");
 const db = require("../../db/connection");
 const seed = require("../../db/seeds/seed");
 const data = require("../../db/data/test-data/index");
-require("jest-sorted");
 
-beforeAll(() => seed(data));
+beforeEach(() => seed(data));
 afterAll(() => db.end());
 
 describe("/api/articles Tests", () => {
@@ -26,9 +25,11 @@ describe("/api/articles Tests", () => {
             votes: 100,
             article_img_url:
               "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            comment_count: "11"
           });
         });
     });
+
     test("200: Responds with all of the articles.", () => {
       return request(app)
         .get("/api/articles")
@@ -47,12 +48,13 @@ describe("/api/articles Tests", () => {
 
     test("200: Responds with the correct ordered articles.", () => {
       return request(app)
-        .get("/api/articles")
+        .get("/api/articles?sort_by=created_at&order=DESC")
         .expect(200)
         .then(({ body: { articles } }) => {
-          expect(articles).toBeSortedBy("created_at");
+          expect(articles).toBeSortedBy("created_at", { descending: true });
         });
     });
+
     test("200: Responds with the comments of a specific article.", () => {
       return request(app)
         .get("/api/articles/6/comments")
@@ -66,6 +68,34 @@ describe("/api/articles Tests", () => {
             created_at: "2020-10-11T15:23:00.000Z",
             comment_id: 16,
           });
+        });
+    });
+
+    // GET QUERIES TESTS: 
+    test("200: Responds the articles array sorted by the votes descending.", () => {
+      return request(app)
+        .get("/api/articles?sort_by=votes&order=DESC")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSortedBy('votes', {descending: true})
+        });
+    });
+
+    test("200: Responds the articles array sorted by the author.", () => {
+      return request(app)
+        .get("/api/articles?sort_by=author&order=DESC")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSortedBy('author', {descending: true})
+        });
+    });
+
+    test("200: Responds the articles array sorted by the topic.", () => {
+      return request(app)
+        .get("/api/articles?sort_by=topic&order=DESC")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSortedBy('topic', {descending: true})
         });
     });
   });
