@@ -8,6 +8,11 @@ const {
   getArticleCommentsById,
 } = require("./controllers/articles.controllers");
 const { getAllUsers } = require("./controllers/users.controllers");
+const {
+  postCommentByArticleId,
+} = require("./controllers/comments.controllers");
+
+app.use(express.json());
 
 app.get("/api", (request, response) => {
   response.status(200).send({ endpoints });
@@ -21,8 +26,11 @@ app.get("/api/articles", getArticles);
 app.get("/api/articles/:articleId", getArticleById);
 app.get("/api/articles/:articleId/comments", getArticleCommentsById);
 
+
+// COMMENTS - POST REQUEST
+app.post("/api/articles/:articleId/comments", postCommentByArticleId);
+
 // USERS - GET REQUESTS
 app.get("/api/users", getAllUsers);
-
 
 module.exports = app;

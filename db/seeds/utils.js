@@ -6,7 +6,7 @@ exports.createRefObject = (array, key1, key2) => {
     referenceObject[object[key1]] = object[key2];
   });
   return referenceObject;
-}
+};
 
 exports.convertTimestampToDate = ({ created_at, ...otherProperties }) => {
   if (!created_at) return { ...otherProperties };
