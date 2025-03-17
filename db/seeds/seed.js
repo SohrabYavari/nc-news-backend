@@ -1,18 +1,21 @@
 const db = require("../connection");
 const format = require("pg-format");
-const { createRefObject, convertTimestampToDate } = require("./utils");
+const {
+  createRefObject,
+  convertTimestampToDate,
+} = require("../../utils/utils");
 
 const seed = ({ topicData, userData, articleData, commentData }) => {
   return db
-    .query(`DROP TABLE IF EXISTS comments`)
+    .query(`DROP TABLE IF EXISTS comments CASCADE`)
     .then(() => {
-      return db.query(`DROP TABLE IF EXISTS articles`);
+      return db.query(`DROP TABLE IF EXISTS articles CASCADE`);
     })
     .then(() => {
-      return db.query(`DROP TABLE IF EXISTS users`);
+      return db.query(`DROP TABLE IF EXISTS users CASCADE`);
     })
     .then(() => {
-      return db.query(`DROP TABLE IF EXISTS topics`);
+      return db.query(`DROP TABLE IF EXISTS topics CASCADE`);
     })
     .then(() => {
       return createTopics();
@@ -74,8 +77,8 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
 
       return db.query(articleReformat);
     })
-    .then(({rows}) => {
-      const commentsRef = createRefObject(rows, 'title', 'article_id')
+    .then(({ rows }) => {
+      const commentsRef = createRefObject(rows, "title", "article_id");
       const commentsMapped = commentData.map((comment) => {
         return [
           commentsRef[comment.article_title],
@@ -90,10 +93,11 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
         `INSERT INTO comments
         (article_id, body, votes, author, created_at)
         VALUES %L RETURNING *
-        `, commentsMapped
-      )
-      return db.query(commentReformat)  
-    })
+        `,
+        commentsMapped
+      );
+      return db.query(commentReformat);
+    });
 };
 
 function createTopics() {
@@ -118,10 +122,10 @@ function createComments() {
   return db.query(`
   CREATE TABLE comments (
   comment_id SERIAL PRIMARY KEY,
-  article_id INT REFERENCES articles(article_id),
+  article_id INT REFERENCES articles(article_id) ON DELETE CASCADE,
   body TEXT NOT NULL,
   votes INT,
-  author VARCHAR(256) REFERENCES users(username),
+  author VARCHAR(256) REFERENCES users(username) ON DELETE CASCADE,
   created_at TIMESTAMP
   )`);
 }
@@ -131,8 +135,8 @@ function createArticles() {
   CREATE TABLE articles (
   article_id SERIAL PRIMARY KEY,
   title VARCHAR(256) NOT NULL,
-  topic VARCHAR(256) REFERENCES topics(slug),
-  author VARCHAR(256) REFERENCES users(username),
+  topic VARCHAR(256) REFERENCES topics(slug) ON DELETE CASCADE,
+  author VARCHAR(256) REFERENCES users(username) ON DELETE CASCADE,
   body TEXT NOT NULL,
   created_at TIMESTAMP,
   votes INT,

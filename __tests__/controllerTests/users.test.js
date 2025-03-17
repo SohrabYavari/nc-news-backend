@@ -6,8 +6,12 @@ const seed = require("../../db/seeds/seed");
 const data = require("../../db/data/test-data/index");
 
 
-beforeEach(() => seed(data));
-afterAll(() => db.end());
+beforeEach(() => {
+  return seed(data);
+});
+afterAll(() => {
+  return db.end();
+});
 
 describe("/api/users Tests", () => {
   describe("GET Tests", () => {
@@ -21,6 +25,17 @@ describe("/api/users Tests", () => {
             expect(typeof user.name).toBe("string");
             expect(typeof user.avatar_url).toBe("string");
           });
+        });
+    });
+  });
+  describe("Err Tests", () => {
+    test("404: Responds with an error message when the array is passed through with no objects inside.", () => {
+      return request(app)
+        .get("/api/usees")
+        .expect(404)
+        .then(({ body }) => {
+          console.log(body);
+          expect(body.msg).toBe("Route not found");
         });
     });
   });
