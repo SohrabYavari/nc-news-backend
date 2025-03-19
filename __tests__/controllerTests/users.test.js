@@ -34,7 +34,6 @@ describe("/api/users Tests", () => {
         .get("/api/usees")
         .expect(404)
         .then(({ body }) => {
-          console.log(body);
           expect(body.msg).toBe("Route not found");
         });
     });
