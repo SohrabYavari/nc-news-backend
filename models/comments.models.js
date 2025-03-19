@@ -2,20 +2,24 @@ const db = require("../db/connection");
 const { checkExists } = require("../utils/utils");
 
 exports.insertComment = (articleId, username, body) => {
-  return db
-    .query(
-      `
-      INSERT INTO comments
-      (article_id, author, body, created_at, votes)
-      VALUES 
-      ($1, $2, $3, CURRENT_TIMESTAMP, 0)
-      RETURNING *
-      `,
-      [articleId, username, body]
-    )
-    .then(({ rows }) => {
-      return rows[0];
+  return checkExists("articles", "article_id", articleId).then(() => {
+    return checkExists("users", "username", username).then(() => {
+      return db
+        .query(
+          `
+          INSERT INTO comments
+          (article_id, author, body, created_at, votes)
+          VALUES 
+          ($1, $2, $3, CURRENT_TIMESTAMP, 0)
+          RETURNING *
+          `,
+          [articleId, username, body]
+        )
+        .then(({ rows }) => {
+          return rows[0];
+        });
     });
+  });
 };
 
 exports.deleteCommentById = (commentId) => {

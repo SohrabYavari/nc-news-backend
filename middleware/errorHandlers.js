@@ -12,6 +12,15 @@ exports.handlePsqlErrors = (err, req, res, next) => {
   } else next(err);
 };
 
+exports.handleRouteErrors = ("*", (req, res, next) => {
+  try{
+    res.status(404).send({ msg: "Route not found" });
+  }
+  catch(err) {
+    next(err)
+  }
+})
+
 exports.handleServerErrors = (err, req, res, next) => {
   console.log(err);
   res.status(500).send({ msg: "Internal Server Error" });

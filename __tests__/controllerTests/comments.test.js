@@ -16,7 +16,6 @@ afterAll(() => {
   return db.end();
 });
 
-
 describe("POST REQUESTS", () => {
   test("201: /ap/articles/:articleId/comments -=> creates a new comment under an article", () => {
     const newComment = {
@@ -56,13 +55,28 @@ describe("DELETE REQUESTS", () => {
   });
 });
 
-describe.skip("ERROR TESTS", () => {
+describe("ERROR TESTS", () => {
   test("404: /api/comments/:commentId -=> Responds with err msg when comment is not found", () => {
     return request(app)
       .get("/api/comments/notAnumber")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Comment not found");
+        expect(body.msg).toBe("Route not found");
+      });
+  });
+
+  test("404: /api/articles/1/comments -=> Responds with error when author is not found", () => {
+    const newComment = {
+      username: "non existant username",
+      body: "hello from the other side",
+    };
+
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({body}) => {
+        expect(body.msg).toBe('Resource not found')
       });
   });
 });

@@ -27,6 +27,7 @@ const {
   handleCustomErrors,
   handlePsqlErrors,
   handleServerErrors,
+  handleRouteErrors,
 } = require("./middleware/errorHandlers");
 
 app.use(express.json());
@@ -56,18 +57,9 @@ app.get("/api/users", getAllUsers);
 
 // ERROR HANDLERS
 
-app.all("*", (req, res, next) => {
-  try{
-    res.status(404).send({ msg: "Route not found" });
-  }
-  catch(err) {
-    next(err)
-  }
-})
-
-
-app.use(handlePsqlErrors);
 app.use(handleCustomErrors);
+app.use(handlePsqlErrors);
+app.use(handleRouteErrors);
 app.use(handleServerErrors);
 
 module.exports = app;
