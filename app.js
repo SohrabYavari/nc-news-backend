@@ -30,6 +30,7 @@ const {
   handleServerErrors,
   handleRouteErrors,
 } = require("./middleware/errorHandlers");
+app.use(cors())
 
 app.use(express.json());
 app.get("/api", (request, response) => {
@@ -56,7 +57,6 @@ app.delete("/api/comments/:commentId", removeCommentById);
 // USERS - GET REQUESTS
 app.get("/api/users", getAllUsers);
 
-app.use(cors())
 
 // ERROR HANDLERS
 app.use(handleCustomErrors);
