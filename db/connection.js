@@ -17,4 +17,5 @@ if (!process.env.PGDATABASE && !process.env.DATABASE_URL) {
   console.log(`Connected to ${process.env.PGDATABASE}`);
 }
 
+const db = new Pool(config);
 module.exports = db;
