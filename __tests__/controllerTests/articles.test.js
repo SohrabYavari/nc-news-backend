@@ -4,14 +4,11 @@ const app = require("../../app");
 const db = require("../../db/connection");
 const seed = require("../../db/seeds/seed");
 const data = require("../../db/data/test-data/index");
+require('jest-sorted')
 
 
-beforeEach(() => {
-  return seed(data);
-});
-afterAll(() => {
-  return db.end();
-});
+beforeEach(async () => await seed(data));
+afterAll(async () =>  await db.end());
 
 
 describe("GET REQUESTS", () => {

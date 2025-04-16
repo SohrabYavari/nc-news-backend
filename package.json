@@ -1,11 +1,11 @@
 {
   "name": "be-nc-news",
   "version": "1.0.0",
-  "description": "bc-nc-news",
+  "description": "nc-news backend written in JavaScript, Express.js and PSQL",
   "main": "listen.js",
   "scripts": {
     "main": "listen.js",
-    "start": "node listen.js",
+    "dev": "nodemon listen.js",
     "seed-prod": "NODE_ENV=production node ./db/seeds/run-seed.js",
     "setup-dbs": "psql -f ./db/setup-dbs.sql",
     "seed-dev": "node ./db/seeds/run-seed.js",
@@ -29,6 +29,7 @@
     "jest": "^27.5.1",
     "jest-extended": "^2.0.0",
     "jest-sorted": "^1.0.15",
+    "nodemon": "^3.1.9",
     "supertest": "^7.0.0"
   },
   "dependencies": {
@@ -39,9 +40,9 @@
     "pg-format": "^1.0.4"
   },
   "jest": {
+    "testEnvironment": "node",
     "setupFilesAfterEnv": [
-      "jest-extended/all",
-      "jest-sorted"
+      "jest-extended/all"
     ]
   }
 }
