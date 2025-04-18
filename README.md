@@ -1,9 +1,16 @@
-# NC NEWS Backend: 
-Steps to set project up: 
+# NC NEWS Backend:
+
+This backend is created using JavaScript, NodeJS, Express.Js and PSQL.
+
+Steps to set project up:
+
 - create .env files
-    - `.env.dev`
-    - `.env.test`
-- the following must be present in the files: 
+  - `.env.dev`
+  - `.env.test`
+  - `.env.production`
+
+- the following must be present in the files:
+
 
 ```
 PGUSER=your_user
@@ -13,12 +20,13 @@ PGHOST=localhost
 PGPORT=5432
 ```
 
-Setting up dbs:
-- npm run setup-dbs
-- npm run seed-dev
-- npm run test-seed
+To run the project:
+- `npm install`
+- `npm run setup-dbs`
+- `./run.zsh`
 
-# File Structure: 
+
+# File Structure:
 
 ```
 ├ __tests__
@@ -36,5 +44,6 @@ Setting up dbs:
 │   ├ API Queries
 ├ utils
 │   ├ util functions
+├ routes
+│   ├ API routes
 ```
-
